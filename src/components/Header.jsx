@@ -6,11 +6,37 @@ export function Header(props) {
   var onOpenAddModal = props.onOpenAddModal;
   var isAdmin = props.isAdmin;
   var adminUser = props.adminUser;
+  var isOwnerDevice = props.isOwnerDevice;
+  var onUnlockOwnerDevice = props.onUnlockOwnerDevice;
   var onOpenLoginModal = props.onOpenLoginModal;
   var onLogout = props.onLogout;
   var theme = props.theme;
   var onToggleTheme = props.onToggleTheme;
   var totalFiles = props.totalFiles;
+
+  // Stealth logo triple-click detection
+  var logoClickCountRef = React.useRef(0);
+  var logoClickTimerRef = React.useRef(null);
+
+  function handleLogoClick() {
+    logoClickCountRef.current = logoClickCountRef.current + 1;
+    if (logoClickTimerRef.current) {
+      clearTimeout(logoClickTimerRef.current);
+    }
+    if (logoClickCountRef.current >= 3) {
+      logoClickCountRef.current = 0;
+      if (onUnlockOwnerDevice) {
+        onUnlockOwnerDevice();
+      }
+      if (onOpenLoginModal) {
+        onOpenLoginModal();
+      }
+      return;
+    }
+    logoClickTimerRef.current = setTimeout(function() {
+      logoClickCountRef.current = 0;
+    }, 1200);
+  }
 
   function handleInputChange(event) {
     onSearchChange(event.target.value);
@@ -24,13 +50,18 @@ export function Header(props) {
     <header className="app-header">
       <div className="header-container">
         <div className="brand-group">
-          <div className="brand-logo">
+          <div
+            className="brand-logo"
+            onClick={handleLogoClick}
+            style={{ cursor: "pointer" }}
+            title="StudyVault"
+          >
             <span className="logo-icon">📂</span>
           </div>
           <div className="brand-text">
             <h1 className="brand-title">StudyVault</h1>
             <p className="brand-subtitle">
-              Public Notes & Study Hub • {totalFiles} Resource{totalFiles === 1 ? "" : "s"}
+              Public Notes &amp; Study Hub • {totalFiles} Resource{totalFiles === 1 ? "" : "s"}
             </p>
           </div>
         </div>
@@ -83,7 +114,7 @@ export function Header(props) {
                 Logout
               </button>
             </div>
-          ) : (
+          ) : isOwnerDevice ? (
             <button
               type="button"
               className="action-btn login-btn"
@@ -93,7 +124,7 @@ export function Header(props) {
               <span className="btn-icon">🔒</span>
               <span className="btn-label">Admin Login</span>
             </button>
-          )}
+          ) : null}
 
           <button
             type="button"

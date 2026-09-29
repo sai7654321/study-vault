@@ -100,6 +100,49 @@ export default function App() {
   var [isAdmin, setIsAdmin] = React.useState(false);
   var [adminUser, setAdminUser] = React.useState(null);
 
+  // Stealth Owner Device State (Hides Admin button from all other devices)
+  var [isOwnerDevice, setIsOwnerDevice] = React.useState(function() {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    var isLocal =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+    var query = (window.location.search || "").toLowerCase();
+    var hasSecretParam =
+      query.indexOf("admin=true") !== -1 ||
+      query.indexOf("owner=true") !== -1 ||
+      query.indexOf("admin=1") !== -1;
+    var hasSavedFlag = localStorage.getItem("studyvault_owner_device") === "true";
+
+    if (hasSecretParam) {
+      localStorage.setItem("studyvault_owner_device", "true");
+      return true;
+    }
+    return isLocal || hasSavedFlag;
+  });
+
+  function handleUnlockOwnerDevice() {
+    setIsOwnerDevice(true);
+    localStorage.setItem("studyvault_owner_device", "true");
+    showToast("Owner device verified! Admin options unlocked.", "success");
+  }
+
+  // Stealth keyboard shortcut: Ctrl + Shift + A unlocks device and opens login
+  React.useEffect(function() {
+    function handleKeyDown(event) {
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === "A" || event.key === "a")) {
+        event.preventDefault();
+        handleUnlockOwnerDevice();
+        setIsLoginModalOpen(true);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return function() {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   // Check admin session on mount
   React.useEffect(function() {
     var token = localStorage.getItem("studyvault_token");
@@ -193,6 +236,8 @@ export default function App() {
   function handleLoginSuccess(user, token) {
     setIsAdmin(true);
     setAdminUser(user);
+    setIsOwnerDevice(true);
+    localStorage.setItem("studyvault_owner_device", "true");
     if (token) {
       localStorage.setItem("studyvault_token", token);
     }
@@ -555,6 +600,8 @@ export default function App() {
         }}
         isAdmin={isAdmin}
         adminUser={adminUser}
+        isOwnerDevice={isOwnerDevice}
+        onUnlockOwnerDevice={handleUnlockOwnerDevice}
         onOpenLoginModal={function() {
           setIsLoginModalOpen(true);
         }}
