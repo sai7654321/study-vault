@@ -136,10 +136,25 @@ export function FileCard(props) {
           type="button"
           className="card-action-btn btn-preview"
           onClick={handlePreviewClick}
-          title="Open smooth PDF preview"
+          title="Open and read PDF notes"
         >
-          <span className="btn-icon">👁️</span>
-          <span>View PDF</span>
+          <svg
+            className="btn-action-svg"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+          </svg>
+          <span>Open PDF</span>
+          <span className="btn-arrow" aria-hidden="true">→</span>
         </button>
 
         {isAdmin ? (
