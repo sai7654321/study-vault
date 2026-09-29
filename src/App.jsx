@@ -143,6 +143,98 @@ export default function App() {
     };
   }, []);
 
+  // Live Visitor Analytics
+  var [visitorStats, setVisitorStats] = React.useState({
+    totalVisits: 0,
+    uniqueVisitors: 0,
+    isLoading: true
+  });
+
+  React.useEffect(function() {
+    var today = new Date().toISOString().slice(0, 10);
+    var lastVisit = localStorage.getItem("studyvault_last_visit_date");
+    var sessionCounted = sessionStorage.getItem("studyvault_session_counted");
+
+    var isUnique = lastVisit !== today;
+    var shouldIncrement = isUnique || sessionCounted !== "true";
+
+    function applyStats(total, unique) {
+      setVisitorStats({
+        totalVisits: total || 1,
+        uniqueVisitors: unique || 1,
+        isLoading: false
+      });
+    }
+
+    function fetchDirectFallback() {
+      var countBase = "https://countapi.mileshilliard.com/api/v1";
+      var action = shouldIncrement ? "/hit/" : "/get/";
+      fetch(countBase + action + "studyvault_sairajesh_visits")
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(data) {
+          var total = data && data.value ? data.value : 1;
+          fetch(countBase + (isUnique && shouldIncrement ? "/hit/" : "/get/") + "studyvault_sairajesh_uniques")
+            .then(function(resU) {
+              return resU.json();
+            })
+            .then(function(dataU) {
+              applyStats(total, dataU && dataU.value ? dataU.value : 1);
+            })
+            .catch(function() {
+              applyStats(total, Math.ceil(total * 0.7));
+            });
+        })
+        .catch(function() {
+          applyStats(1, 1);
+        });
+    }
+
+    if (shouldIncrement) {
+      localStorage.setItem("studyvault_last_visit_date", today);
+      sessionStorage.setItem("studyvault_session_counted", "true");
+
+      fetch("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isUnique: isUnique })
+      })
+        .then(function(res) {
+          if (res.ok) {
+            return res.json().then(function(data) {
+              if (data && data.totalVisits) {
+                applyStats(data.totalVisits, data.uniqueVisitors);
+              } else {
+                fetchDirectFallback();
+              }
+            });
+          }
+          fetchDirectFallback();
+        })
+        .catch(function() {
+          fetchDirectFallback();
+        });
+    } else {
+      fetch("/api/analytics")
+        .then(function(res) {
+          if (res.ok) {
+            return res.json().then(function(data) {
+              if (data && data.totalVisits) {
+                applyStats(data.totalVisits, data.uniqueVisitors);
+              } else {
+                fetchDirectFallback();
+              }
+            });
+          }
+          fetchDirectFallback();
+        })
+        .catch(function() {
+          fetchDirectFallback();
+        });
+    }
+  }, []);
+
   // Check admin session on mount
   React.useEffect(function() {
     var token = localStorage.getItem("studyvault_token");
@@ -609,12 +701,23 @@ export default function App() {
         theme={theme}
         onToggleTheme={handleToggleTheme}
         totalFiles={files.length}
+        visitorStats={visitorStats}
       />
 
       <main className="main-content">
         <section className="hero-banner">
           <div className="hero-content">
-            <div className="hero-badge">⚡ Auto-Segregated Google Drive Vault</div>
+            <div className="hero-badge-group">
+              <div className="hero-badge">⚡ Auto-Segregated Google Drive Vault</div>
+              {visitorStats.totalVisits > 0 ? (
+                <div className="hero-visitor-pill" title="Live learner activity">
+                  <span className="live-dot"></span>
+                  <span>{visitorStats.totalVisits.toLocaleString()} Total Visits</span>
+                  <span className="pill-divider">•</span>
+                  <span>{visitorStats.uniqueVisitors.toLocaleString()} Learners</span>
+                </div>
+              ) : null}
+            </div>
             <h2 className="hero-heading">Public Study Material &amp; Cheat Sheets</h2>
             <p className="hero-description">
               Upload your PDFs directly to Google Drive, and this dashboard will automatically segregate
@@ -809,6 +912,11 @@ export default function App() {
         <div className="footer-content">
           <p>
             StudyVault • Segregated Public Drive Portal for Students &amp; Developers
+            {visitorStats.totalVisits > 0 ? (
+              <span className="footer-visitor-counter">
+                {" "}• 👥 <strong>{visitorStats.totalVisits.toLocaleString()}</strong> visits (<strong>{visitorStats.uniqueVisitors.toLocaleString()}</strong> learners)
+              </span>
+            ) : null}
           </p>
           <div className="footer-links">
             <button type="button" className="footer-link-btn" onClick={handleResetDefaultFiles}>
