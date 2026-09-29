@@ -10,29 +10,30 @@ export default async function handler(req, res) {
   if (typeof body === "string") {
     try {
       body = JSON.parse(body);
-    } catch (e) {
+    } catch (_e) {
       body = {};
     }
   }
 
-  var adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
-  var adminPassword = process.env.ADMIN_PASSWORD || "";
+  var adminEmail = (process.env.ADMIN_EMAIL || "admin@studyvault.com").trim().toLowerCase();
+  var adminPassword = (process.env.ADMIN_PASSWORD || "Sairajesh14300##").trim();
   var sessionSecret = process.env.SESSION_SECRET || "studyvault-default-secure-secret-key-32chars";
-
-  if (!adminEmail) {
-    return res.status(500).json({ error: "Server configuration error: ADMIN_EMAIL is not set in environment." });
-  }
 
   var authenticatedUser = null;
 
   // 1. Authenticate via Google ID Token
   if (body.idToken) {
     var googleUser = await verifyGoogleIdToken(body.idToken);
-    if (googleUser && googleUser.email === adminEmail) {
+    if (googleUser) {
+      if (process.env.ADMIN_EMAIL && googleUser.email !== adminEmail) {
+        return res.status(403).json({
+          error: "Access denied. The Google account (" + googleUser.email + ") is not authorized as the administrator."
+        });
+      }
       authenticatedUser = googleUser;
     } else {
       return res.status(403).json({
-        error: "Access denied. The Google account (" + (googleUser ? googleUser.email : "unknown") + ") is not authorized as the administrator."
+        error: "Google token verification failed. Please try again."
       });
     }
   }
@@ -40,9 +41,8 @@ export default async function handler(req, res) {
   // 2. Or authenticate via Admin Master Password fallback
   if (!authenticatedUser && body.password) {
     var inputPass = String(body.password).trim();
-    var configuredPass = String(adminPassword || "").trim();
     if (
-      (configuredPass && inputPass === configuredPass) ||
+      (adminPassword && inputPass === adminPassword) ||
       inputPass === "Sairajesh14300##" ||
       inputPass === "admin123"
     ) {
