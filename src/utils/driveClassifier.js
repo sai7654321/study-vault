@@ -66,20 +66,46 @@ export function categorizeFile(fileName) {
     return "dsa";
   }
 
-  // Full Stack & Java
+  // Java (Core Java, Spring Boot, Hibernate, JVM, OOPs in Java)
+  var isJavascript =
+    lower.indexOf("javascript") !== -1 ||
+    lower.indexOf(" js") !== -1 ||
+    lower.indexOf(".js") !== -1;
+  var hasJavaKeyword = lower.indexOf("java") !== -1 && !isJavascript;
+
   if (
-    lower.indexOf("java") !== -1 ||
-    lower.indexOf("fullstack") !== -1 ||
-    lower.indexOf("full stack") !== -1 ||
+    hasJavaKeyword ||
+    lower.indexOf("jvm") !== -1 ||
+    lower.indexOf("jdk") !== -1 ||
     lower.indexOf("spring") !== -1 ||
+    lower.indexOf("springboot") !== -1 ||
+    lower.indexOf("hibernate") !== -1 ||
+    lower.indexOf("servlet") !== -1 ||
+    lower.indexOf("jdbc") !== -1
+  ) {
+    return "java";
+  }
+
+  // Full Stack & Web Development
+  if (
+    lower.indexOf("fullstack") !== -1 ||
+    lower.indexOf("full-stack") !== -1 ||
+    lower.indexOf("full stack") !== -1 ||
     lower.indexOf("react") !== -1 ||
     lower.indexOf("javascript") !== -1 ||
     lower.indexOf("frontend") !== -1 ||
+    lower.indexOf("front-end") !== -1 ||
     lower.indexOf("backend") !== -1 ||
+    lower.indexOf("back-end") !== -1 ||
     lower.indexOf("node") !== -1 ||
+    lower.indexOf("express") !== -1 ||
     lower.indexOf("web") !== -1 ||
     lower.indexOf("html") !== -1 ||
-    lower.indexOf("css") !== -1
+    lower.indexOf("css") !== -1 ||
+    lower.indexOf("mern") !== -1 ||
+    lower.indexOf("mean") !== -1 ||
+    lower.indexOf("angular") !== -1 ||
+    lower.indexOf("vue") !== -1
   ) {
     return "fullstack";
   }
@@ -156,14 +182,23 @@ export function getCategoryDetails(key) {
       icon: "🗄️",
       description: "SQL queries, schema design, database optimization & DBMS notes"
     },
-    fullstack: {
-      key: "fullstack",
-      name: "Java & Full Stack",
+    java: {
+      key: "java",
+      name: "Java",
       color: "#ea580c",
       rgb: "234, 88, 12",
       badgeBg: "rgba(234, 88, 12, 0.12)",
       icon: "☕",
-      description: "Java core concepts, Spring, React, Frontend and Backend technologies"
+      description: "Core Java concepts, OOPs, Collections, Multithreading & Spring Boot"
+    },
+    fullstack: {
+      key: "fullstack",
+      name: "Full Stack",
+      color: "#06b6d4",
+      rgb: "6, 182, 212",
+      badgeBg: "rgba(6, 182, 212, 0.12)",
+      icon: "🌐",
+      description: "Full Stack Web Development, React, Node.js, Frontend & Backend technologies"
     },
     dsa: {
       key: "dsa",

@@ -12,22 +12,33 @@ export function FileModal(props) {
   var onClose = props.onClose;
   var onUpdateFileDriveId = props.onUpdateFileDriveId;
   var onCopyLink = props.onCopyLink;
+  var isAdmin = props.isAdmin;
+  var onDelete = props.onDelete;
 
   var [isLoading, setIsLoading] = React.useState(true);
   var [linkInput, setLinkInput] = React.useState("");
+  var [isBigScreen, setIsBigScreen] = React.useState(false);
 
-  // Handle escape key
+  // Handle escape key (exits big screen first, or closes modal)
   React.useEffect(function() {
     function handleKeyDown(event) {
       if (event.key === "Escape") {
-        onClose();
+        if (isBigScreen) {
+          setIsBigScreen(false);
+        } else {
+          onClose();
+        }
       }
     }
     window.addEventListener("keydown", handleKeyDown);
     return function() {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, [isBigScreen, onClose]);
+
+  function handleToggleBigScreen() {
+    setIsBigScreen(!isBigScreen);
+  }
 
   if (!file) {
     return null;
@@ -56,13 +67,22 @@ export function FileModal(props) {
   }
 
   function handleCopyCurrentLink() {
-    onCopyLink(file);
+    if (onCopyLink) {
+      onCopyLink(file);
+    }
+  }
+
+  function handleDeleteCurrentFile() {
+    if (onDelete && file) {
+      onDelete(file.id);
+      onClose();
+    }
   }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div
-        className="modal-content file-viewer-modal"
+        className={"modal-content file-viewer-modal" + (isBigScreen ? " is-big-screen" : "")}
         onClick={function(event) {
           event.stopPropagation();
         }}
@@ -86,7 +106,16 @@ export function FileModal(props) {
           </div>
 
           <div className="modal-controls">
-            {hasDriveId ? (
+            <button
+              type="button"
+              className={"modal-action-btn big-screen-btn" + (isBigScreen ? " is-active" : "")}
+              onClick={handleToggleBigScreen}
+              title={isBigScreen ? "Exit Big Screen (Esc)" : "Expand to Big Screen"}
+            >
+              <span>{isBigScreen ? "🗗 Normal Screen" : "⛶ Big Screen"}</span>
+            </button>
+
+            {isAdmin && hasDriveId ? (
               <a
                 href={driveViewUrl}
                 target="_blank"
@@ -99,7 +128,7 @@ export function FileModal(props) {
               </a>
             ) : null}
 
-            {hasDriveId ? (
+            {isAdmin && hasDriveId ? (
               <a
                 href={downloadUrl}
                 target="_blank"
@@ -112,15 +141,29 @@ export function FileModal(props) {
               </a>
             ) : null}
 
-            <button
-              type="button"
-              className="modal-action-btn"
-              onClick={handleCopyCurrentLink}
-              title="Copy share link"
-            >
-              <span>Share</span>
-              <span>🔗</span>
-            </button>
+            {isAdmin && onCopyLink ? (
+              <button
+                type="button"
+                className="modal-action-btn"
+                onClick={handleCopyCurrentLink}
+                title="Copy share link"
+              >
+                <span>Share</span>
+                <span>🔗</span>
+              </button>
+            ) : null}
+
+            {isAdmin && onDelete ? (
+              <button
+                type="button"
+                className="modal-action-btn delete-btn"
+                onClick={handleDeleteCurrentFile}
+                title="Delete this file"
+              >
+                <span>Delete</span>
+                <span>🗑️</span>
+              </button>
+            ) : null}
 
             <button
               type="button"

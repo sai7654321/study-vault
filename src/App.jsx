@@ -4,6 +4,8 @@ import { CategoryFilter } from "./components/CategoryFilter.jsx";
 import { FileCard } from "./components/FileCard.jsx";
 import { FileModal } from "./components/FileModal.jsx";
 import { AddFileModal } from "./components/AddFileModal.jsx";
+import { AdminLoginModal } from "./components/AdminLoginModal.jsx";
+import { EditFileModal } from "./components/EditFileModal.jsx";
 import { Toast } from "./components/Toast.jsx";
 import { getDefaultFiles } from "./data/defaultFiles.js";
 import { getCategoryDetails, buildDriveViewUrl, categorizeFile } from "./utils/driveClassifier.js";
@@ -90,7 +92,37 @@ export default function App() {
   // Modals & Popups
   var [previewFile, setPreviewFile] = React.useState(null);
   var [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
+  var [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+  var [editingFile, setEditingFile] = React.useState(null);
   var [toast, setToast] = React.useState(null);
+
+  // Admin authentication state
+  var [isAdmin, setIsAdmin] = React.useState(false);
+  var [adminUser, setAdminUser] = React.useState(null);
+
+  // Check admin session on mount
+  React.useEffect(function() {
+    var token = localStorage.getItem("studyvault_token");
+    fetch("/api/auth/session", {
+      headers: token ? { "Authorization": "Bearer " + token } : {}
+    })
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(data) {
+        if (data && data.authenticated && data.user) {
+          setIsAdmin(true);
+          setAdminUser(data.user);
+        } else {
+          setIsAdmin(false);
+          setAdminUser(null);
+        }
+      })
+      .catch(function() {
+        setIsAdmin(false);
+        setAdminUser(null);
+      });
+  }, []);
 
   // Sync theme with DOM
   React.useEffect(function() {
@@ -158,6 +190,30 @@ export default function App() {
     }
   }
 
+  function handleLoginSuccess(user, token) {
+    setIsAdmin(true);
+    setAdminUser(user);
+    if (token) {
+      localStorage.setItem("studyvault_token", token);
+    }
+    showToast("Welcome back, " + (user.name || user.email || "Admin") + "!", "success");
+  }
+
+  function handleLogout() {
+    fetch("/api/auth/logout", { method: "POST" })
+      .then(function() {
+        setIsAdmin(false);
+        setAdminUser(null);
+        localStorage.removeItem("studyvault_token");
+        showToast("Signed out of Admin session", "info");
+      })
+      .catch(function() {
+        setIsAdmin(false);
+        setAdminUser(null);
+        localStorage.removeItem("studyvault_token");
+      });
+  }
+
   function handleToggleStar(fileId) {
     var updated = [];
     for (var i = 0; i < files.length; i = i + 1) {
@@ -212,30 +268,187 @@ export default function App() {
   }
 
   function handleAddSingleFile(newFile) {
-    var updated = [newFile].concat(files);
-    setFiles(updated);
-    saveCloudFiles(updated);
-    var meta = getCategoryDetails(newFile.category);
-    showToast("Added \"" + newFile.name + "\" & synced to cloud!", "success");
+    if (!isAdmin) {
+      showToast("Unauthorized: Admin login required to add files.", "error");
+      return;
+    }
+
+    var token = localStorage.getItem("studyvault_token");
+    fetch("/api/files", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? "Bearer " + token : ""
+      },
+      body: JSON.stringify(newFile)
+    })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        if (result.status === 201 && result.data.success) {
+          var created = result.data.file;
+          created.category = categorizeFile(created.name);
+          setFiles([created].concat(files));
+          var meta = getCategoryDetails(created.category);
+          showToast("Added \"" + created.name + "\" to " + meta.name + "!", "success");
+        } else {
+          // Fallback to local and saveCloudFiles
+          var updated = [newFile].concat(files);
+          setFiles(updated);
+          saveCloudFiles(updated);
+          showToast("Added \"" + newFile.name + "\" to vault!", "success");
+        }
+      })
+      .catch(function() {
+        var updated = [newFile].concat(files);
+        setFiles(updated);
+        saveCloudFiles(updated);
+        showToast("Added \"" + newFile.name + "\" to vault!", "success");
+      });
   }
 
   function handleBatchAddFiles(newFileList) {
+    if (!isAdmin) {
+      showToast("Unauthorized: Admin login required.", "error");
+      return;
+    }
     var updated = newFileList.concat(files);
     setFiles(updated);
     saveCloudFiles(updated);
     showToast("Imported & synced " + newFileList.length + " notes to cloud!", "success");
   }
 
+  function handleUploadPdf(uploadData) {
+    var token = localStorage.getItem("studyvault_token");
+    return fetch("/api/files/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? "Bearer " + token : ""
+      },
+      body: JSON.stringify(uploadData)
+    })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        if (result.status === 201 && result.data.success) {
+          var newFile = result.data.file;
+          newFile.category = categorizeFile(newFile.name);
+          setFiles([newFile].concat(files));
+          showToast("Uploaded \"" + newFile.name + "\" to Google Drive!", "success");
+          return { success: true };
+        }
+        return { success: false, error: result.data.error || "Upload failed." };
+      })
+      .catch(function(err) {
+        return { success: false, error: err.message };
+      });
+  }
+
+  function handleEditFile(file) {
+    setEditingFile(file);
+  }
+
+  function handleSaveEditFile(updatedData) {
+    var token = localStorage.getItem("studyvault_token");
+    return fetch("/api/files/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? "Bearer " + token : ""
+      },
+      body: JSON.stringify(updatedData)
+    })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        if (result.status === 200 && result.data.success) {
+          var modified = result.data.file;
+          modified.category = categorizeFile(modified.name);
+          var updatedList = [];
+          for (var i = 0; i < files.length; i = i + 1) {
+            if (files[i].id === modified.id) {
+              updatedList.push(modified);
+            } else {
+              updatedList.push(files[i]);
+            }
+          }
+          setFiles(updatedList);
+          showToast("File details updated successfully!", "success");
+          return { success: true };
+        }
+        return { success: false, error: result.data.error || "Failed to update file." };
+      })
+      .catch(function(err) {
+        return { success: false, error: err.message };
+      });
+  }
+
   function handleDeleteFile(fileId) {
-    var remaining = [];
+    if (!isAdmin) {
+      showToast("Unauthorized: Admin privileges required to delete files.", "error");
+      return;
+    }
+
+    var targetFile = null;
     for (var i = 0; i < files.length; i = i + 1) {
-      if (files[i].id !== fileId) {
-        remaining.push(files[i]);
+      if (files[i].id === fileId) {
+        targetFile = files[i];
+        break;
       }
     }
-    setFiles(remaining);
-    saveCloudFiles(remaining);
-    showToast("File removed and synced to cloud", "info");
+
+    var confirmMsg = targetFile
+      ? "Are you sure you want to permanently delete \"" + targetFile.name + "\" from Google Drive and StudyVault?"
+      : "Are you sure you want to permanently delete this resource?";
+
+    if (!window.confirm(confirmMsg)) {
+      return;
+    }
+
+    var token = localStorage.getItem("studyvault_token");
+    fetch("/api/files/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? "Bearer " + token : ""
+      },
+      body: JSON.stringify({
+        fileId: fileId,
+        driveId: targetFile ? targetFile.driveId : ""
+      })
+    })
+      .then(function(res) {
+        return res.json().then(function(data) {
+          return { status: res.status, data: data };
+        });
+      })
+      .then(function(result) {
+        if (result.status === 200 && result.data.success) {
+          var remaining = [];
+          for (var j = 0; j < files.length; j = j + 1) {
+            if (files[j].id !== fileId) {
+              remaining.push(files[j]);
+            }
+          }
+          setFiles(remaining);
+          showToast("File deleted from Google Drive & StudyVault", "info");
+        } else {
+          showToast(result.data.error || "Failed to delete file", "error");
+        }
+      })
+      .catch(function(err) {
+        showToast("Delete request failed: " + err.message, "error");
+      });
   }
 
   function handleCopyShareLink(file) {
@@ -340,6 +553,12 @@ export default function App() {
         onOpenSyncModal={function() {
           setIsAddModalOpen(true);
         }}
+        isAdmin={isAdmin}
+        adminUser={adminUser}
+        onOpenLoginModal={function() {
+          setIsLoginModalOpen(true);
+        }}
+        onLogout={handleLogout}
         theme={theme}
         onToggleTheme={handleToggleTheme}
         totalFiles={files.length}
@@ -352,8 +571,8 @@ export default function App() {
             <h2 className="hero-heading">Public Study Material &amp; Cheat Sheets</h2>
             <p className="hero-description">
               Upload your PDFs directly to Google Drive, and this dashboard will automatically segregate
-              them into <strong>SQL &amp; Databases</strong>, <strong>Java &amp; Full Stack</strong>,{" "}
-              <strong>DSA Patterns</strong>, <strong>Interview &amp; Aptitude</strong>,{" "}
+              them into <strong>SQL &amp; Databases</strong>, <strong>Java</strong>,{" "}
+              <strong>Full Stack</strong>, <strong>DSA Patterns</strong>, <strong>Interview &amp; Aptitude</strong>,{" "}
               <strong>Python</strong>, and <strong>Other Files</strong>.
             </p>
           </div>
@@ -371,11 +590,20 @@ export default function App() {
             <div
               className="stat-pill"
               style={{ "--pill-color": "#ea580c", "--pill-rgb": "234, 88, 12" }}
-              onClick={function() { setActiveCategory("fullstack"); }}
+              onClick={function() { setActiveCategory("java"); }}
             >
               <span className="stat-icon">☕</span>
+              <span className="stat-number">{categoryCounts.java || 0}</span>
+              <span className="stat-label">Java</span>
+            </div>
+            <div
+              className="stat-pill"
+              style={{ "--pill-color": "#06b6d4", "--pill-rgb": "6, 182, 212" }}
+              onClick={function() { setActiveCategory("fullstack"); }}
+            >
+              <span className="stat-icon">🌐</span>
               <span className="stat-number">{categoryCounts.fullstack || 0}</span>
-              <span className="stat-label">Java / Full Stack</span>
+              <span className="stat-label">Full Stack</span>
             </div>
             <div
               className="stat-pill"
@@ -496,15 +724,17 @@ export default function App() {
                     Clear Search
                   </button>
                 ) : null}
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={function() {
-                    setIsAddModalOpen(true);
-                  }}
-                >
-                  + Add Notes to this Category
-                </button>
+                {isAdmin ? (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={function() {
+                      setIsAddModalOpen(true);
+                    }}
+                  >
+                    + Add Notes to this Category
+                  </button>
+                ) : null}
               </div>
             </div>
           ) : (
@@ -514,10 +744,12 @@ export default function App() {
                   <FileCard
                     key={item.id}
                     file={item}
+                    isAdmin={isAdmin}
                     onPreview={setPreviewFile}
                     onToggleStar={handleToggleStar}
                     onCopyLink={handleCopyShareLink}
-                    onDelete={handleDeleteFile}
+                    onEdit={handleEditFile}
+                    onDelete={isAdmin ? handleDeleteFile : null}
                   />
                 );
               })}
@@ -542,7 +774,12 @@ export default function App() {
       {previewFile ? (
         <FileModal
           file={previewFile}
+          isAdmin={isAdmin}
           onClose={function() {
+            setPreviewFile(null);
+          }}
+          onDelete={function(fileId) {
+            handleDeleteFile(fileId);
             setPreviewFile(null);
           }}
           onUpdateFileDriveId={handleUpdateDriveId}
@@ -557,6 +794,24 @@ export default function App() {
         }}
         onAddFile={handleAddSingleFile}
         onBatchAdd={handleBatchAddFiles}
+        onUploadPdf={handleUploadPdf}
+      />
+
+      <AdminLoginModal
+        isOpen={isLoginModalOpen}
+        onClose={function() {
+          setIsLoginModalOpen(false);
+        }}
+        onLoginSuccess={handleLoginSuccess}
+      />
+
+      <EditFileModal
+        file={editingFile}
+        isOpen={Boolean(editingFile)}
+        onClose={function() {
+          setEditingFile(null);
+        }}
+        onSave={handleSaveEditFile}
       />
 
       <Toast

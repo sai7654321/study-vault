@@ -1,137 +1,137 @@
-﻿[
-    {
-        "id":  "file-web-roadmap",
-        "name":  "Copy of 🚀 6-MONTH WEB DEVELOPMENT ROADMAP.pdf",
-        "driveId":  "",
-        "size":  "291 KB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Complete 6-month roadmap for Full Stack Web Development (HTML, CSS, JS, React, Node, SQL \u0026 Projects)."
-    },
-    {
-        "id":  "file-aptitude-30day",
-        "name":  "Copy of Aptitude_Shortcuts_Formulas_30_Day_Roadmap.pdf",
-        "driveId":  "1XANTZ9Favyjgo2qTGH7y87rOynNBczMG",
-        "size":  "38 KB",
-        "uploadDate":  "11:10 AM",
-        "starred":  false,
-        "description":  "30-Day quantitative \u0026 logical aptitude shortcut formulas, speed math techniques and placement test hacks."
-    },
-    {
-        "id":  "file-dsa-pattern",
-        "name":  "Copy of DSA Pattern .pdf",
-        "driveId":  "1oJuUCyLCtq8gODjlc3tKnMKu0X8cPEp3",
-        "size":  "5.1 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Crucial Data Structure \u0026 Algorithm patterns for coding rounds: Sliding Window, Two Pointers, DFS, BFS, DP."
-    },
-    {
-        "id":  "file-dsa-day10",
-        "name":  "Copy of Dsa series Day10 notes.pdf",
-        "driveId":  "1GA4m0174XvPUZkUC9acdUs7vIdRURUQD",
-        "size":  "200 KB",
-        "uploadDate":  "11:10 AM",
-        "starred":  false,
-        "description":  "Structured day-by-day DSA series notes with step-by-step problem walkthroughs and time complexities."
-    },
-    {
-        "id":  "file-free-coding",
-        "name":  "Copy of free_coding_websites.pdf",
-        "driveId":  "12LZnXWUWWh1i9SuKBF1-ZBlLn4Rn63cJ",
-        "size":  "2 KB",
-        "uploadDate":  "11:10 AM",
-        "starred":  false,
-        "description":  "Hand-picked directory of free platforms to practice coding, mock interviews, system design and CS concepts."
-    },
-    {
-        "id":  "file-java-dsa-interview",
-        "name":  "Copy of Java_DSA_interview_qns.pdf",
-        "driveId":  "1SgUx-snX3PLRM6sTVxQO0tJR_v7PHdDg",
-        "size":  "3.1 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Top Java \u0026 Data Structures technical interview questions asked in service \u0026 product company rounds."
-    },
-    {
-        "id":  "file-java-dsa",
-        "name":  "Copy of JavaDSA.pdf",
-        "driveId":  "1pfUk8EAY-RREE6r_7vug0M9CdDFJbGsf",
-        "size":  "7.1 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  false,
-        "description":  "Core Java implementation of fundamental Data Structures (Linked Lists, Stacks, Queues, Binary Trees \u0026 Graphs)."
-    },
-    {
-        "id":  "file-java-full-notes",
-        "name":  "Copy of JavaFullNotes.pdf",
-        "driveId":  "1VBCHmacg8nclB0SvIG4jsvN7eJAdNBee",
-        "size":  "8.2 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Master comprehensive Java notes: OOP fundamentals, Exception handling, Collections framework, Multi-threading \u0026 Streams."
-    },
-    {
-        "id":  "file-sql-useful",
-        "name":  "Copy of Most Useful SQL Notes .pdf",
-        "driveId":  "1GrAVu6vElCOF5QbAlCPY58vJQqkdBSAy",
-        "size":  "2.5 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Most useful SQL query patterns, subqueries, group by, joins, window functions and DBMS performance indexes."
-    },
-    {
-        "id":  "file-sql-handwritten",
-        "name":  "Copy of SQL_handwritten_note.pdf",
-        "driveId":  "11l3Hxb5QSElBaUyIHFqBGN-HVM8U3uWB",
-        "size":  "12.1 MB",
-        "uploadDate":  "11:10 AM",
-        "starred":  true,
-        "description":  "Clean handwritten SQL notes covering relational algebra, joins, aggregate queries, and normalization (1NF to BCNF)."
-    },
-    {
-        "id":  "file-software-roles",
-        "name":  "Copy of Software Roles.pdf",
-        "driveId":  "",
-        "size":  "357 KB",
-        "uploadDate":  "11:10 AM",
-        "starred":  false,
-        "description":  "Breakdown of software engineering career paths: Frontend, Backend, Full Stack, DevOps, QA, and Data Engineering skills."
-    },
-    {
-        "id":  "file-tcs-guide",
-        "name":  "TCS Interview \u0026 Resume Guide.pdf",
-        "driveId":  "1uPG9JUZFINv7DJKWe2n7bOOXU8ZLbC8q",
-        "size":  "5.8 MB",
-        "uploadDate":  "Modified recently",
-        "starred":  false,
-        "description":  "Complete TCS campus interview roadmap, resume formatting guidelines, HR \u0026 Technical round question bank."
-    },
-    {
-        "id":  "file-tcs-ninja-aptitude",
-        "name":  "TCS_Ninja_High_Priority_Aptitude_Topics.pdf",
-        "driveId":  "1wP9eYcBYOrXAqcnERz1NxRRhNPBypJNa",
-        "size":  "8.3 MB",
-        "uploadDate":  "Uploaded recently",
-        "starred":  false,
-        "description":  "High priority quantitative, numerical, verbal and reasoning topics asked in TCS Ninja and Digital examinations."
-    },
-    {
-        "id":  "file-custom-portfolio-prompt",
-        "name":  "portfolio_prompt",
-        "driveId":  "1iFkaD3e_623BRXSBQrOTL1ZXUoQvpfjc",
-        "size":  "PDF Document",
-        "uploadDate":  "Recently added",
-        "starred":  false,
-        "description":  "Custom prompt and portfolio guide notes."
-    },
-    {
-        "id":  "file-custom-sqlnotes",
-        "name":  "Sqlnotes",
-        "driveId":  "16Wk4QRjpZfmJ9rmswzNwfYDVJAAIyOx3",
-        "size":  "PDF Document",
-        "uploadDate":  "Recently added",
-        "starred":  false,
-        "description":  "Custom SQL notes and query references."
-    }
+[
+  {
+    "id": "file-web-roadmap",
+    "name": "Copy of 🚀 6-MONTH WEB DEVELOPMENT ROADMAP.pdf",
+    "driveId": "",
+    "size": "291 KB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Complete 6-month roadmap for Full Stack Web Development (HTML, CSS, JS, React, Node, SQL & Projects)."
+  },
+  {
+    "id": "file-aptitude-30day",
+    "name": "Copy of Aptitude_Shortcuts_Formulas_30_Day_Roadmap.pdf",
+    "driveId": "1XANTZ9Favyjgo2qTGH7y87rOynNBczMG",
+    "size": "38 KB",
+    "uploadDate": "11:10 AM",
+    "starred": false,
+    "description": "30-Day quantitative & logical aptitude shortcut formulas, speed math techniques and placement test hacks."
+  },
+  {
+    "id": "file-dsa-pattern",
+    "name": "Copy of DSA Pattern .pdf",
+    "driveId": "1oJuUCyLCtq8gODjlc3tKnMKu0X8cPEp3",
+    "size": "5.1 MB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Crucial Data Structure & Algorithm patterns for coding rounds: Sliding Window, Two Pointers, DFS, BFS, DP."
+  },
+  {
+    "id": "file-dsa-day10",
+    "name": "Copy of Dsa series Day10 notes.pdf",
+    "driveId": "1GA4m0174XvPUZkUC9acdUs7vIdRURUQD",
+    "size": "200 KB",
+    "uploadDate": "11:10 AM",
+    "starred": false,
+    "description": "Structured day-by-day DSA series notes with step-by-step problem walkthroughs and time complexities."
+  },
+  {
+    "id": "file-free-coding",
+    "name": "Copy of free_coding_websites.pdf",
+    "driveId": "12LZnXWUWWh1i9SuKBF1-ZBlLn4Rn63cJ",
+    "size": "2 KB",
+    "uploadDate": "11:10 AM",
+    "starred": false,
+    "description": "Hand-picked directory of free platforms to practice coding, mock interviews, system design and CS concepts."
+  },
+  {
+    "id": "file-java-dsa-interview",
+    "name": "Copy of Java_DSA_interview_qns.pdf",
+    "driveId": "1SgUx-snX3PLRM6sTVxQO0tJR_v7PHdDg",
+    "size": "3.1 MB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Top Java & Data Structures technical interview questions asked in service & product company rounds."
+  },
+  {
+    "id": "file-java-dsa",
+    "name": "Copy of JavaDSA.pdf",
+    "driveId": "1pfUk8EAY-RREE6r_7vug0M9CdDFJbGsf",
+    "size": "7.1 MB",
+    "uploadDate": "11:10 AM",
+    "starred": false,
+    "description": "Core Java implementation of fundamental Data Structures (Linked Lists, Stacks, Queues, Binary Trees & Graphs)."
+  },
+  {
+    "id": "file-java-full-notes",
+    "name": "Copy of JavaFullNotes.pdf",
+    "driveId": "1VBCHmacg8nclB0SvIG4jsvN7eJAdNBee",
+    "size": "8.2 MB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Master comprehensive Java notes: OOP fundamentals, Exception handling, Collections framework, Multi-threading & Streams."
+  },
+  {
+    "id": "file-sql-useful",
+    "name": "Copy of Most Useful SQL Notes .pdf",
+    "driveId": "1GrAVu6vElCOF5QbAlCPY58vJQqkdBSAy",
+    "size": "2.5 MB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Most useful SQL query patterns, subqueries, group by, joins, window functions and DBMS performance indexes."
+  },
+  {
+    "id": "file-sql-handwritten",
+    "name": "Copy of SQL_handwritten_note.pdf",
+    "driveId": "11l3Hxb5QSElBaUyIHFqBGN-HVM8U3uWB",
+    "size": "12.1 MB",
+    "uploadDate": "11:10 AM",
+    "starred": true,
+    "description": "Clean handwritten SQL notes covering relational algebra, joins, aggregate queries, and normalization (1NF to BCNF)."
+  },
+  {
+    "id": "file-software-roles",
+    "name": "Copy of Software Roles.pdf",
+    "driveId": "",
+    "size": "357 KB",
+    "uploadDate": "11:10 AM",
+    "starred": false,
+    "description": "Breakdown of software engineering career paths: Frontend, Backend, Full Stack, DevOps, QA, and Data Engineering skills."
+  },
+  {
+    "id": "file-tcs-guide",
+    "name": "TCS Interview & Resume Guide.pdf",
+    "driveId": "1uPG9JUZFINv7DJKWe2n7bOOXU8ZLbC8q",
+    "size": "5.8 MB",
+    "uploadDate": "Modified recently",
+    "starred": false,
+    "description": "Complete TCS campus interview roadmap, resume formatting guidelines, HR & Technical round question bank."
+  },
+  {
+    "id": "file-tcs-ninja-aptitude",
+    "name": "TCS_Ninja_High_Priority_Aptitude_Topics.pdf",
+    "driveId": "1wP9eYcBYOrXAqcnERz1NxRRhNPBypJNa",
+    "size": "8.3 MB",
+    "uploadDate": "Uploaded recently",
+    "starred": false,
+    "description": "High priority quantitative, numerical, verbal and reasoning topics asked in TCS Ninja and Digital examinations."
+  },
+  {
+    "id": "file-custom-portfolio-prompt",
+    "name": "portfolio_prompt",
+    "driveId": "1iFkaD3e_623BRXSBQrOTL1ZXUoQvpfjc",
+    "size": "PDF Document",
+    "uploadDate": "Recently added",
+    "starred": false,
+    "description": "Custom prompt and portfolio guide notes."
+  },
+  {
+    "id": "file-custom-sqlnotes",
+    "name": "Sqlnotes",
+    "driveId": "16Wk4QRjpZfmJ9rmswzNwfYDVJAAIyOx3",
+    "size": "PDF Document",
+    "uploadDate": "Recently added",
+    "starred": false,
+    "description": "Custom SQL notes and query references."
+  }
 ]

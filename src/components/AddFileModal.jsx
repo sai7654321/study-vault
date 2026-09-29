@@ -8,7 +8,8 @@ import {
 var CATEGORY_OPTIONS = [
   { key: "auto", label: "✨ Auto-detect from filename" },
   { key: "sql", label: "🗄️ SQL & Databases" },
-  { key: "fullstack", label: "☕ Java & Full Stack" },
+  { key: "java", label: "☕ Java" },
+  { key: "fullstack", label: "🌐 Full Stack" },
   { key: "dsa", label: "⚡ DSA & Problem Solving" },
   { key: "interview", label: "🎯 Interview & Aptitude" },
   { key: "python", label: "🐍 Python" },
@@ -21,13 +22,20 @@ export function AddFileModal(props) {
   var onClose = props.onClose;
   var onAddFile = props.onAddFile;
   var onBatchAdd = props.onBatchAdd;
+  var onUploadPdf = props.onUploadPdf;
 
-  var [activeTab, setActiveTab] = React.useState("single"); // 'single' | 'batch' | 'folder'
+  var [activeTab, setActiveTab] = React.useState("upload"); // 'upload' | 'single' | 'batch' | 'folder'
   var [fileName, setFileName] = React.useState("");
   var [driveLink, setDriveLink] = React.useState("");
   var [selectedCategory, setSelectedCategory] = React.useState("auto");
   var [description, setDescription] = React.useState("");
   var [batchText, setBatchText] = React.useState("");
+
+  // Direct File Upload State
+  var [uploadFileObj, setUploadFileObj] = React.useState(null);
+  var [uploadFileBase64, setUploadFileBase64] = React.useState("");
+  var [isUploading, setIsUploading] = React.useState(false);
+  var [uploadError, setUploadError] = React.useState("");
 
   // Drive API Sync State
   var [folderInput, setFolderInput] = React.useState("");
@@ -58,6 +66,73 @@ export function AddFileModal(props) {
   var liveDetected = categorizeFile(fileName || driveLink);
   var finalCategoryKey = selectedCategory === "auto" ? liveDetected : selectedCategory;
   var catDetails = getCategoryDetails(finalCategoryKey);
+
+  function formatFileSize(bytes) {
+    if (!bytes || bytes <= 0) return "0 KB";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function handleFileInputChange(event) {
+    var files = event.target.files;
+    if (files && files.length > 0) {
+      var file = files[0];
+      if (!file.name.toLowerCase().endsWith(".pdf") && file.type !== "application/pdf") {
+        setUploadError("Please select a valid PDF file.");
+        return;
+      }
+      setUploadError("");
+      setUploadFileObj(file);
+      if (!fileName) {
+        setFileName(file.name);
+      }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        setUploadFileBase64(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function handleUploadSubmit(event) {
+    event.preventDefault();
+    if (!uploadFileBase64 || !uploadFileObj) {
+      setUploadError("Please select a PDF file to upload.");
+      return;
+    }
+
+    if (!onUploadPdf) {
+      setUploadError("Direct upload handler not connected.");
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadError("");
+
+    onUploadPdf({
+      fileName: fileName.trim() || uploadFileObj.name,
+      fileBase64: uploadFileBase64,
+      mimeType: "application/pdf",
+      category: finalCategoryKey,
+      description: description.trim()
+    })
+      .then(function(result) {
+        setIsUploading(false);
+        if (result && result.success) {
+          setUploadFileObj(null);
+          setUploadFileBase64("");
+          setFileName("");
+          setDescription("");
+          onClose();
+        } else {
+          setUploadError(result && result.error ? result.error : "Failed to upload to Google Drive.");
+        }
+      })
+      .catch(function(err) {
+        setIsUploading(false);
+        setUploadError("Upload error: " + err.message);
+      });
+  }
 
   function handleSingleSubmit(event) {
     event.preventDefault();
@@ -230,6 +305,15 @@ export function AddFileModal(props) {
         <div className="modal-tabs">
           <button
             type="button"
+            className={"modal-tab-btn" + (activeTab === "upload" ? " active" : "")}
+            onClick={function() {
+              setActiveTab("upload");
+            }}
+          >
+            📤 Upload PDF to Drive
+          </button>
+          <button
+            type="button"
             className={"modal-tab-btn" + (activeTab === "single" ? " active" : "")}
             onClick={function() {
               setActiveTab("single");
@@ -258,6 +342,119 @@ export function AddFileModal(props) {
         </div>
 
         <div className="modal-body">
+          {activeTab === "upload" ? (
+            <form onSubmit={handleUploadSubmit} className="add-form upload-form">
+              {uploadError ? (
+                <div className="login-error-banner">
+                  <span className="error-icon">⚠️</span>
+                  <span className="error-text">{uploadError}</span>
+                </div>
+              ) : null}
+
+              <div className="upload-dropzone">
+                <input
+                  type="file"
+                  id="pdf-file-input"
+                  className="file-input-hidden"
+                  accept=".pdf,application/pdf"
+                  onChange={handleFileInputChange}
+                  disabled={isUploading}
+                />
+                <label htmlFor="pdf-file-input" className="dropzone-label">
+                  <span className="dropzone-icon">📥</span>
+                  {uploadFileObj ? (
+                    <div className="dropzone-file-info">
+                      <strong className="selected-filename">{uploadFileObj.name}</strong>
+                      <span className="selected-filesize">({formatFileSize(uploadFileObj.size)})</span>
+                      <span className="change-file-hint">Click to change file</span>
+                    </div>
+                  ) : (
+                    <div className="dropzone-prompt">
+                      <strong>Choose a PDF file or drag it here</strong>
+                      <span>Maximum size: 15MB • Uploads directly to Google Drive</span>
+                    </div>
+                  )}
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Title in StudyVault <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="e.g. FullStack_Java_CheatSheet.pdf"
+                  value={fileName}
+                  onChange={function(e) {
+                    setFileName(e.target.value);
+                  }}
+                  required
+                  disabled={isUploading}
+                />
+              </div>
+
+              <div className="form-group">
+                <div className="form-label-with-detected">
+                  <label className="form-label">Category</label>
+                  {selectedCategory === "auto" ? (
+                    <span className="auto-detected-badge" style={{ color: catDetails.color }}>
+                      Auto: {catDetails.name}
+                    </span>
+                  ) : null}
+                </div>
+                <select
+                  className="form-select"
+                  value={selectedCategory}
+                  onChange={function(e) {
+                    setSelectedCategory(e.target.value);
+                  }}
+                  disabled={isUploading}
+                >
+                  {CATEGORY_OPTIONS.map(function(opt) {
+                    return (
+                      <option key={opt.key} value={opt.key}>
+                        {opt.label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Description / Summary</label>
+                <textarea
+                  className="form-textarea"
+                  rows={2}
+                  placeholder="Brief notes summary..."
+                  value={description}
+                  onChange={function(e) {
+                    setDescription(e.target.value);
+                  }}
+                  disabled={isUploading}
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="modal-btn-cancel"
+                  onClick={onClose}
+                  disabled={isUploading}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="modal-btn-submit"
+                  disabled={isUploading || !uploadFileObj}
+                >
+                  {isUploading ? "Uploading to Google Drive..." : "Upload to Google Drive"}
+                </button>
+              </div>
+            </form>
+          ) : null}
+
           {activeTab === "single" ? (
             <form onSubmit={handleSingleSubmit} className="add-form">
               <div className="form-group">

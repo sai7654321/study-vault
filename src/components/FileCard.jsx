@@ -11,12 +11,21 @@ export function FileCard(props) {
   var onToggleStar = props.onToggleStar;
   var onCopyLink = props.onCopyLink;
   var onDelete = props.onDelete;
+  var onEdit = props.onEdit;
+  var isAdmin = props.isAdmin;
 
   var categoryMeta = getCategoryDetails(file.category);
   var hasDriveId = Boolean(file.driveId && file.driveId.length > 5);
 
   function handlePreviewClick() {
     onPreview(file);
+  }
+
+  function handleEditClick(event) {
+    event.stopPropagation();
+    if (onEdit) {
+      onEdit(file);
+    }
   }
 
   function handleDownloadClick(event) {
@@ -40,7 +49,7 @@ export function FileCard(props) {
 
   function handleDeleteClick(event) {
     event.stopPropagation();
-    if (window.confirm("Remove \"" + file.name + "\" from list?")) {
+    if (onDelete) {
       onDelete(file.id);
     }
   }
@@ -117,44 +126,61 @@ export function FileCard(props) {
           <span>View PDF</span>
         </button>
 
-        <button
-          type="button"
-          className="card-action-btn btn-download"
-          onClick={handleDownloadClick}
-          title="Download file"
-        >
-          <span className="btn-icon">⬇️</span>
-          <span>Download</span>
-        </button>
+        {isAdmin ? (
+          <button
+            type="button"
+            className="card-action-btn btn-download"
+            onClick={handleDownloadClick}
+            title="Download file"
+          >
+            <span className="btn-icon">⬇️</span>
+            <span>Download</span>
+          </button>
+        ) : null}
 
-        <button
-          type="button"
-          className="icon-action-btn"
-          onClick={handleCopyClick}
-          title="Copy public link"
-        >
-          🔗
-        </button>
+        {isAdmin ? (
+          <button
+            type="button"
+            className="icon-action-btn"
+            onClick={handleCopyClick}
+            title="Copy public link"
+          >
+            🔗
+          </button>
+        ) : null}
 
-        <a
-          href={driveViewUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="icon-action-btn"
-          title="Open in Google Drive"
-          onClick={function(e) {
-            e.stopPropagation();
-          }}
-        >
-          ↗️
-        </a>
+        {isAdmin ? (
+          <a
+            href={driveViewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="icon-action-btn"
+            title="Open in Google Drive"
+            onClick={function(e) {
+              e.stopPropagation();
+            }}
+          >
+            ↗️
+          </a>
+        ) : null}
 
-        {onDelete ? (
+        {isAdmin && onEdit ? (
+          <button
+            type="button"
+            className="icon-action-btn edit-btn"
+            onClick={handleEditClick}
+            title="Edit file details"
+          >
+            ✏️
+          </button>
+        ) : null}
+
+        {isAdmin && onDelete ? (
           <button
             type="button"
             className="icon-action-btn delete-btn"
             onClick={handleDeleteClick}
-            title="Remove file"
+            title="Delete file"
           >
             🗑️
           </button>

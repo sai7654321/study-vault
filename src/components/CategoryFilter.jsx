@@ -1,7 +1,7 @@
 import React from "react";
 import { getCategoryDetails } from "../utils/driveClassifier.js";
 
-var CATEGORY_KEYS = ["all", "sql", "fullstack", "dsa", "interview", "python", "core_cs", "other_files", "starred"];
+var CATEGORY_KEYS = ["all", "sql", "java", "fullstack", "dsa", "interview", "python", "core_cs", "other_files", "starred"];
 
 export function CategoryFilter(props) {
   var activeCategory = props.activeCategory;

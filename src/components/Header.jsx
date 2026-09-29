@@ -4,7 +4,10 @@ export function Header(props) {
   var searchQuery = props.searchQuery;
   var onSearchChange = props.onSearchChange;
   var onOpenAddModal = props.onOpenAddModal;
-  var onOpenSyncModal = props.onOpenSyncModal;
+  var isAdmin = props.isAdmin;
+  var adminUser = props.adminUser;
+  var onOpenLoginModal = props.onOpenLoginModal;
+  var onLogout = props.onLogout;
   var theme = props.theme;
   var onToggleTheme = props.onToggleTheme;
   var totalFiles = props.totalFiles;
@@ -54,16 +57,43 @@ export function Header(props) {
         </div>
 
         <div className="header-actions">
+          {isAdmin ? (
+            <div className="admin-status-group">
+              <span className="admin-badge" title={"Logged in as " + (adminUser && adminUser.email ? adminUser.email : "Admin")}>
+                <span className="admin-dot">●</span>
+                <span className="admin-email">{adminUser && adminUser.email ? adminUser.email.split("@")[0] : "Admin"}</span>
+              </span>
 
-          <button
-            type="button"
-            className="action-btn add-btn"
-            onClick={onOpenAddModal}
-            title="Add a new file or Drive link"
-          >
-            <span className="btn-icon">+</span>
-            <span className="btn-label">Add Note</span>
-          </button>
+              <button
+                type="button"
+                className="action-btn add-btn"
+                onClick={onOpenAddModal}
+                title="Add a new file or Drive link"
+              >
+                <span className="btn-icon">+</span>
+                <span className="btn-label">Add Note</span>
+              </button>
+
+              <button
+                type="button"
+                className="admin-logout-btn"
+                onClick={onLogout}
+                title="Sign out of Admin session"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="action-btn login-btn"
+              onClick={onOpenLoginModal}
+              title="Admin login for site owner"
+            >
+              <span className="btn-icon">🔒</span>
+              <span className="btn-label">Admin Login</span>
+            </button>
+          )}
 
           <button
             type="button"

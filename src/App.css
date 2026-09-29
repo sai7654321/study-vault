@@ -893,7 +893,8 @@
   }
 }
 
-.modal-content {
+.modal-content,
+.modal-container {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-highlight);
   border-radius: var(--radius-lg);
@@ -915,10 +916,50 @@
   }
 }
 
-/* File Viewer Modal (Full Screen Height) */
+/* File Viewer Modal (Spacious Default + Full Big Screen) */
 .file-viewer-modal {
-  max-width: 1100px;
-  height: 88vh;
+  max-width: 1260px;
+  height: 92vh;
+  transition: all var(--transition-normal);
+}
+
+.file-viewer-modal.is-big-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  z-index: 1000 !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.file-viewer-modal.is-big-screen .viewer-body {
+  height: calc(100vh - 65px) !important;
+  max-height: calc(100vh - 65px) !important;
+}
+
+.modal-action-btn.big-screen-btn {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+  border-color: rgba(99, 102, 241, 0.35);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.modal-action-btn.big-screen-btn:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border-color: #6366f1;
+  color: #ffffff;
+}
+
+.modal-action-btn.big-screen-btn.is-active {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  border-color: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.45);
 }
 
 .modal-header {
@@ -993,6 +1034,17 @@
 
 .modal-action-btn.download-btn:hover {
   background-color: var(--accent-hover);
+}
+
+.modal-action-btn.delete-btn {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.modal-action-btn.delete-btn:hover {
+  background-color: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
 }
 
 .modal-close-btn {
@@ -1318,9 +1370,10 @@
   margin-top: 10px;
 }
 
-.btn-cancel {
+.btn-cancel,
+.btn-secondary {
   padding: 9px 18px;
-  background: none;
+  background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   border-radius: var(--radius-sm);
@@ -1329,9 +1382,11 @@
   transition: all var(--transition-fast);
 }
 
-.btn-cancel:hover {
+.btn-cancel:hover,
+.btn-secondary:hover {
   color: var(--text-primary);
   border-color: var(--border-highlight);
+  background: var(--bg-card-hover);
 }
 
 .btn-submit {
@@ -1442,6 +1497,331 @@
 }
 
 /* ==========================================================================
+   Admin Header & Controls
+   ========================================================================== */
+
+.admin-status-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.admin-dot {
+  font-size: 0.6rem;
+  color: #10b981;
+  animation: adminPulse 2s infinite ease-in-out;
+}
+
+@keyframes adminPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.admin-email {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-logout-btn {
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-logout-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.login-btn {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.login-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+
+/* FileCard Edit & Delete Buttons */
+.edit-btn:hover {
+  color: #f59e0b !important;
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.delete-btn:hover {
+  color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* ==========================================================================
+   Admin Login & Edit Modals
+   ========================================================================== */
+
+.login-modal {
+  max-width: 440px;
+  width: 92%;
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-highlight) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+.edit-modal {
+  max-width: 560px;
+  width: 92%;
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-highlight) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+.login-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary);
+}
+
+.login-instructions {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  background: rgba(99, 102, 241, 0.08);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent-primary);
+}
+
+.login-instructions strong {
+  color: var(--text-primary);
+}
+
+.login-modal .form-input,
+.edit-modal .form-input,
+.edit-modal .form-select,
+.edit-modal .form-textarea {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.login-modal .form-input:focus,
+.edit-modal .form-input:focus,
+.edit-modal .form-select:focus,
+.edit-modal .form-textarea:focus {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow) !important;
+}
+
+.login-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm);
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+  margin: 6px 0;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.login-divider span {
+  padding: 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .form-input {
+  padding-right: 42px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.login-submit-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Direct PDF Upload Dropzone
+   ========================================================================== */
+
+.file-input-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.upload-dropzone {
+  position: relative;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  text-align: center;
+}
+
+.upload-dropzone:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.dropzone-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.dropzone-icon {
+  font-size: 2.2rem;
+}
+
+.dropzone-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropzone-prompt strong {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.dropzone-prompt span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.dropzone-file-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.selected-filename {
+  font-size: 0.95rem;
+  color: var(--accent-primary);
+  word-break: break-all;
+}
+
+.selected-filesize {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.change-file-hint {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
    Responsive Adaptations
    ========================================================================== */
 
@@ -1471,5 +1851,13 @@
   .files-container.view-list .file-card {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .admin-email {
+    display: none;
+  }
+
+  .admin-status-group {
+    gap: 6px;
   }
 }
