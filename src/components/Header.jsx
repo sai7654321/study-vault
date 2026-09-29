@@ -60,6 +60,7 @@ export function Header(props) {
             style={{ cursor: "pointer" }}
             title="StudyWallet"
           >
+            <div className="logo-aura" aria-hidden="true"></div>
             <img
               src={studyVaultLogo}
               alt="StudyWallet Logo"
@@ -68,6 +69,7 @@ export function Header(props) {
               height="44"
               loading="eager"
             />
+            <div className="logo-sheen" aria-hidden="true"></div>
           </div>
           <div className="brand-text">
             <h1 className="brand-title">StudyWallet</h1>
