@@ -603,21 +603,110 @@
 .star-btn {
   background: none;
   border: none;
-  color: var(--text-muted);
-  font-size: 20px;
   cursor: pointer;
   line-height: 1;
-  padding: 2px;
-  transition: transform var(--transition-fast), color var(--transition-fast);
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: var(--radius-full);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
 }
 
 .star-btn:hover {
-  transform: scale(1.2);
-  color: #eab308;
+  background-color: rgba(234, 179, 8, 0.12);
+  transform: scale(1.18);
 }
 
-.star-btn.is-starred {
-  color: #eab308;
+.star-btn:active {
+  transform: scale(0.9);
+}
+
+.star-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.star-svg {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 0 1px rgba(234, 179, 8, 0.25));
+}
+
+/* Hover state: tilt + bright golden glow */
+.star-btn:hover .star-svg {
+  transform: rotate(15deg) scale(1.1);
+  stroke: #facc15;
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
+}
+
+/* When Starred: golden fill, pop bounce, and continuous breathing twinkle */
+.star-btn.is-starred .star-svg {
+  fill: #eab308;
+  stroke: #eab308;
+  animation: starPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, starPulseGlow 3s infinite ease-in-out 0.45s;
+}
+
+/* Star Pop Animation when favorited */
+@keyframes starPop {
+  0% {
+    transform: scale(0.7) rotate(-20deg);
+  }
+  50% {
+    transform: scale(1.4) rotate(20deg);
+    filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.95));
+  }
+  75% {
+    transform: scale(0.92) rotate(-6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 6px rgba(234, 179, 8, 0.6));
+  }
+}
+
+/* Gentle Breathing Golden Glow for Starred items */
+@keyframes starPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.5));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.85));
+    transform: scale(1.08);
+  }
+}
+
+/* Sparkle burst ring effect */
+.star-sparkle-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.star-btn.is-starred .star-sparkle-ring {
+  animation: starRingBurst 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes starRingBurst {
+  0% {
+    transform: scale(0.6);
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.8);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(234, 179, 8, 0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.4);
+    box-shadow: 0 0 0 14px rgba(234, 179, 8, 0);
+    opacity: 0;
+  }
 }
 
 .card-body {
