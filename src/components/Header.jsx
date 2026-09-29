@@ -56,7 +56,11 @@ export function Header(props) {
             style={{ cursor: "pointer" }}
             title="StudyVault"
           >
-            <span className="logo-icon">📂</span>
+            <img
+              src="/logo.png"
+              alt="StudyVault Logo"
+              className="brand-logo-img"
+            />
           </div>
           <div className="brand-text">
             <h1 className="brand-title">StudyVault</h1>

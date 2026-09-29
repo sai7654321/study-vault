@@ -148,7 +148,7 @@ export function AdminLoginModal(props) {
       >
         <div className="modal-header">
           <div className="modal-title-group">
-            <span className="modal-icon">🔐</span>
+            <img src="/logo.png" alt="StudyVault" className="modal-logo-img" />
             <div>
               <h3 className="modal-title">Admin Authentication</h3>
               <p className="modal-subtitle">
