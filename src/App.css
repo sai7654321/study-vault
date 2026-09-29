@@ -259,14 +259,14 @@
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: var(--radius-full);
   background: rgba(99, 102, 241, 0.15);
   color: #818cf8;
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 12px;
   border: 1px solid rgba(99, 102, 241, 0.3);
+  line-height: 1.2;
 }
 
 [data-theme="light"] .hero-badge {
@@ -2072,23 +2072,36 @@
 .hero-badge-group {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 14px;
 }
 
 .hero-visitor-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: var(--radius-full);
   background: rgba(99, 102, 241, 0.12);
   border: 1px solid rgba(99, 102, 241, 0.25);
   color: var(--accent-light);
-  font-size: 0.82rem;
-  font-weight: 500;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.hero-visitor-pill.is-clickable {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.hero-visitor-pill.is-clickable:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.2);
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
 }
 
 .hero-visitor-pill .live-dot {
