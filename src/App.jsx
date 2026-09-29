@@ -277,7 +277,7 @@ export default function App() {
     localStorage.setItem("studyvault_has_entered_name", "true");
     setIsWelcomeModalOpen(false);
     sendHeartbeat(enteredName);
-    showToast("Welcome to StudyVault, " + enteredName + "! 🚀", "success");
+    showToast("Welcome to StudyWallet, " + enteredName + "! 🚀", "success");
   }
 
   var [learnersList, setLearnersList] = React.useState([]);
@@ -680,7 +680,7 @@ export default function App() {
     }
 
     var confirmMsg = targetFile
-      ? "Are you sure you want to permanently delete \"" + targetFile.name + "\" from Google Drive and StudyVault?"
+      ? "Are you sure you want to permanently delete \"" + targetFile.name + "\" from Google Drive and StudyWallet?"
       : "Are you sure you want to permanently delete this resource?";
 
     if (!window.confirm(confirmMsg)) {
@@ -713,7 +713,7 @@ export default function App() {
             }
           }
           setFiles(remaining);
-          showToast("File deleted from Google Drive & StudyVault", "info");
+          showToast("File deleted from Google Drive & StudyWallet", "info");
         } else {
           showToast(result.data.error || "Failed to delete file", "error");
         }
@@ -1057,7 +1057,7 @@ export default function App() {
       <footer className="app-footer">
         <div className="footer-content">
           <p>
-            StudyVault • Segregated Public Drive Portal for Students &amp; Developers
+            StudyWallet • Segregated Public Drive Portal for Students &amp; Developers
             {visitorStats.totalVisits > 0 ? (
               <span className="footer-visitor-counter">
                 {" "}• 👥 <strong>{visitorStats.totalVisits.toLocaleString()}</strong> visits (<strong>{visitorStats.uniqueVisitors.toLocaleString()}</strong> learners)

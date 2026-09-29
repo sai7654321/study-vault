@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://study-vault-seven.vercel.app/sitemap.xml

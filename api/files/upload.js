@@ -90,6 +90,6 @@ export default async function handler(req, res) {
   return res.status(201).json({
     success: true,
     file: newFile,
-    message: "PDF uploaded successfully to Google Drive and added to StudyVault!"
+    message: "PDF uploaded successfully to Google Drive and added to StudyWallet!"
   });
 }

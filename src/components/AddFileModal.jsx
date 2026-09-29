@@ -379,7 +379,7 @@ export function AddFileModal(props) {
 
               <div className="form-group">
                 <label className="form-label">
-                  Title in StudyVault <span className="required">*</span>
+                  Title in StudyWallet <span className="required">*</span>
                 </label>
                 <input
                   type="text"

@@ -58,11 +58,11 @@ export function Header(props) {
             className="brand-logo"
             onClick={handleLogoClick}
             style={{ cursor: "pointer" }}
-            title="StudyVault"
+            title="StudyWallet"
           >
             <img
               src={studyVaultLogo}
-              alt="StudyVault Logo"
+              alt="StudyWallet Logo"
               className="brand-logo-img"
               width="44"
               height="44"
@@ -70,7 +70,7 @@ export function Header(props) {
             />
           </div>
           <div className="brand-text">
-            <h1 className="brand-title">StudyVault</h1>
+            <h1 className="brand-title">StudyWallet</h1>
             <p className="brand-subtitle">
               Public Notes &amp; Study Hub • {totalFiles} Resource{totalFiles === 1 ? "" : "s"}
             </p>

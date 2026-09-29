@@ -128,16 +128,16 @@ export function WelcomeNameModal(props) {
               <div className="welcome-logo-wrapper">
                 <img
                   src={studyVaultLogo}
-                  alt="StudyVault Logo"
+                  alt="StudyWallet Logo"
                   className="welcome-logo-img"
                   width="64"
                   height="64"
                 />
                 <span className="welcome-pulse-glow"></span>
               </div>
-              <h2 className="welcome-title">Welcome to StudyVault! 🎓</h2>
+              <h2 className="welcome-title">Welcome to StudyWallet! 🎓</h2>
               <p className="welcome-subtitle">
-                Please enter your name to enter the study vault and access all PDFs &amp; interview notes.
+                Please enter your name to enter the study wallet and access all PDFs &amp; interview notes.
               </p>
             </div>
 
@@ -193,7 +193,7 @@ export function WelcomeNameModal(props) {
               Welcome aboard, <span className="celebration-highlight">{savedName}</span>! 🎉
             </h2>
             <p className="celebration-subtitle">
-              Your personalized StudyVault is ready! Let's conquer your study goals together. 🚀
+              Your personalized StudyWallet is ready! Let's conquer your study goals together. 🚀
             </p>
 
             {/* Feature Perks Pills */}
@@ -219,7 +219,7 @@ export function WelcomeNameModal(props) {
                 className="celebration-enter-btn"
                 onClick={handleDirectEnter}
               >
-                <span>Enter Study Vault Now</span>
+                <span>Enter Study Wallet Now</span>
                 <span className="btn-arrow" aria-hidden="true">🚀</span>
               </button>
               <div className="celebration-progress-bar">

@@ -68,7 +68,7 @@ export function OnlineLearnersModal(props) {
                 Active Learners ({learners.length} Online)
               </h3>
               <p className="modal-subtitle">
-                Students and developers currently studying in StudyVault
+                Students and developers currently studying in StudyWallet
               </p>
             </div>
           </div>

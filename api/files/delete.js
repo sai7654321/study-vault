@@ -58,6 +58,6 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     success: true,
-    message: "File deleted successfully from Drive and StudyVault."
+    message: "File deleted successfully from Drive and StudyWallet."
   });
 }

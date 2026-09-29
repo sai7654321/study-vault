@@ -149,11 +149,11 @@ export function AdminLoginModal(props) {
       >
         <div className="modal-header">
           <div className="modal-title-group">
-            <img src={studyVaultLogo} alt="StudyVault" className="modal-logo-img" width="38" height="38" />
+            <img src={studyVaultLogo} alt="StudyWallet" className="modal-logo-img" width="38" height="38" />
             <div>
               <h3 className="modal-title">Admin Authentication</h3>
               <p className="modal-subtitle">
-                Restricted to the verified StudyVault owner account
+                Restricted to the verified StudyWallet owner account
               </p>
             </div>
           </div>
