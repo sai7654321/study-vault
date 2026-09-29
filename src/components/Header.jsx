@@ -15,6 +15,8 @@ export function Header(props) {
   var onToggleTheme = props.onToggleTheme;
   var totalFiles = props.totalFiles;
   var visitorStats = props.visitorStats;
+  var onOpenLearnersModal = props.onOpenLearnersModal;
+  var onlineCount = props.onlineCount;
 
   // Stealth logo triple-click detection
   var logoClickCountRef = React.useRef(0);
@@ -136,15 +138,17 @@ export function Header(props) {
           ) : null}
 
           {visitorStats && visitorStats.totalVisits > 0 ? (
-            <div
-              className="visitor-counter-badge"
-              title={"Total Visits: " + visitorStats.totalVisits + " | Unique Learners: " + visitorStats.uniqueVisitors}
+            <button
+              type="button"
+              className="visitor-counter-badge is-clickable"
+              onClick={onOpenLearnersModal}
+              title={"🟢 " + (onlineCount || 1) + " Online Now • Click to view names"}
             >
               <span className="visitor-pulse-dot"></span>
               <span className="visitor-count-text">
-                👥 {visitorStats.totalVisits.toLocaleString()}
+                👥 {onlineCount || visitorStats.totalVisits.toLocaleString()}
               </span>
-            </div>
+            </button>
           ) : null}
 
           <button
