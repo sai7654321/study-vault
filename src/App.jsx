@@ -7,6 +7,7 @@ import { AddFileModal } from "./components/AddFileModal.jsx";
 import { AdminLoginModal } from "./components/AdminLoginModal.jsx";
 import { EditFileModal } from "./components/EditFileModal.jsx";
 import { OnlineLearnersModal } from "./components/OnlineLearnersModal.jsx";
+import { WelcomeNameModal } from "./components/WelcomeNameModal.jsx";
 import { Toast } from "./components/Toast.jsx";
 import { getDefaultFiles } from "./data/defaultFiles.js";
 import { getCategoryDetails, buildDriveViewUrl, categorizeFile } from "./utils/driveClassifier.js";
@@ -261,6 +262,22 @@ export default function App() {
     setLearnerName(newName);
     localStorage.setItem("studyvault_learner_name", newName);
     sendHeartbeat(newName);
+  }
+
+  // Welcome Name Prompt for visitors entering the website
+  var [isWelcomeModalOpen, setIsWelcomeModalOpen] = React.useState(function() {
+    if (typeof window === "undefined") return false;
+    var hasEntered = localStorage.getItem("studyvault_has_entered_name") === "true";
+    return !hasEntered;
+  });
+
+  function handleWelcomeNameSubmit(enteredName) {
+    setLearnerName(enteredName);
+    localStorage.setItem("studyvault_learner_name", enteredName);
+    localStorage.setItem("studyvault_has_entered_name", "true");
+    setIsWelcomeModalOpen(false);
+    sendHeartbeat(enteredName);
+    showToast("Welcome to StudyVault, " + enteredName + "! 🚀", "success");
   }
 
   var [learnersList, setLearnersList] = React.useState([]);
@@ -1107,6 +1124,12 @@ export default function App() {
         currentUserName={effectiveLearnerName}
         onUpdateUserName={handleUpdateLearnerName}
         isAdmin={isAdmin}
+      />
+
+      <WelcomeNameModal
+        isOpen={isWelcomeModalOpen}
+        onSaveName={handleWelcomeNameSubmit}
+        initialName={learnerName && learnerName.indexOf("Student #") === -1 ? learnerName : ""}
       />
 
       <Toast
