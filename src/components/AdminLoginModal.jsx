@@ -1,4 +1,5 @@
 import React from "react";
+import studyVaultLogo from "../assets/logo.png";
 
 export function AdminLoginModal(props) {
   var isOpen = props.isOpen;
@@ -148,7 +149,7 @@ export function AdminLoginModal(props) {
       >
         <div className="modal-header">
           <div className="modal-title-group">
-            <img src="/logo.png" alt="StudyVault" className="modal-logo-img" />
+            <img src={studyVaultLogo} alt="StudyVault" className="modal-logo-img" width="38" height="38" />
             <div>
               <h3 className="modal-title">Admin Authentication</h3>
               <p className="modal-subtitle">

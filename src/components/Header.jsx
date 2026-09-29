@@ -1,4 +1,5 @@
 import React from "react";
+import studyVaultLogo from "../assets/logo.png";
 
 export function Header(props) {
   var searchQuery = props.searchQuery;
@@ -57,9 +58,12 @@ export function Header(props) {
             title="StudyVault"
           >
             <img
-              src="/logo.png"
+              src={studyVaultLogo}
               alt="StudyVault Logo"
               className="brand-logo-img"
+              width="44"
+              height="44"
+              loading="eager"
             />
           </div>
           <div className="brand-text">
