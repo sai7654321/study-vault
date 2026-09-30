@@ -48,13 +48,17 @@ function collectSavedDriveIds() {
 }
 
 export default function App() {
-  // Theme state
+  // Theme state: defaults to light mode
   var [theme, setTheme] = React.useState(function() {
     var saved = localStorage.getItem(THEME_KEY);
-    if (saved) {
-      return saved;
+    if (saved === "light" || saved === "dark") {
+      var userExplicitToggled = localStorage.getItem("study_vault_theme_explicit");
+      if (userExplicitToggled === "true") {
+        return saved;
+      }
+      return "light";
     }
-    return "dark";
+    return "light";
   });
 
   // Files state — merges saved driveIds into fresh defaults
@@ -277,6 +281,8 @@ export default function App() {
     localStorage.setItem("studyvault_has_entered_name", "true");
     setIsWelcomeModalOpen(false);
     sendHeartbeat(enteredName);
+    setTheme("light");
+    localStorage.setItem("study_vault_theme_explicit", "true");
     showToast("Welcome to StudyWallet, " + enteredName + "! 🚀", "success");
   }
 
@@ -383,6 +389,10 @@ export default function App() {
         if (data && data.authenticated && data.user) {
           setIsAdmin(true);
           setAdminUser(data.user);
+          var userExplicitToggled = localStorage.getItem("study_vault_theme_explicit");
+          if (userExplicitToggled !== "true") {
+            setTheme("light");
+          }
         } else {
           setIsAdmin(false);
           setAdminUser(null);
@@ -453,6 +463,7 @@ export default function App() {
   }
 
   function handleToggleTheme() {
+    localStorage.setItem("study_vault_theme_explicit", "true");
     if (theme === "dark") {
       setTheme("light");
     } else {
@@ -468,6 +479,9 @@ export default function App() {
     if (token) {
       localStorage.setItem("studyvault_token", token);
     }
+    setTheme("light");
+    localStorage.setItem(THEME_KEY, "light");
+    localStorage.setItem("study_vault_theme_explicit", "true");
     showToast("Welcome back, " + (user.name || user.email || "Admin") + "!", "success");
   }
 
