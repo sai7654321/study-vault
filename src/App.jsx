@@ -929,6 +929,16 @@ export default function App() {
               <span className="stat-label">Python</span>
             </div>
             <div
+              className={"stat-pill" + (activeCategory === "starred" ? " active" : "")}
+              style={{ "--pill-color": "#f59e0b", "--pill-rgb": "245, 158, 11" }}
+              onClick={function() { setActiveCategory("starred"); }}
+              title="Filter Starred Notes"
+            >
+              <span className="stat-icon">⭐</span>
+              <span className="stat-number">{categoryCounts.starred || 0}</span>
+              <span className="stat-label">Starred Notes</span>
+            </div>
+            <div
               className="stat-pill"
               style={{ "--pill-color": "#64748b", "--pill-rgb": "100, 116, 139" }}
               onClick={function() { setActiveCategory("other_files"); }}
