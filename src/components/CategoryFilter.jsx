@@ -2,7 +2,6 @@ import React from "react";
 import { getCategoryDetails } from "../utils/driveClassifier.js";
 
 var CATEGORY_KEYS = [
-  "all",
   "sql",
   "java",
   "fullstack",
@@ -35,7 +34,11 @@ export function CategoryFilter(props) {
     var isActive = activeCategory === catKey;
 
     function handleClick() {
-      onSelectCategory(catKey);
+      if (isActive) {
+        onSelectCategory("all");
+      } else {
+        onSelectCategory(catKey);
+      }
     }
 
     return (
@@ -47,6 +50,7 @@ export function CategoryFilter(props) {
         style={{
           "--tab-accent": meta.color
         }}
+        title={isActive ? "Click to show all files" : "Filter by " + meta.name}
       >
         <span className="tab-icon">{meta.icon}</span>
         <span className="tab-name">{meta.name}</span>
