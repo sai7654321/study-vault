@@ -31,7 +31,33 @@ export function categorizeFile(fileName) {
   }
   var lower = fileName.toLowerCase();
 
-  // SQL & Databases
+  // 1. Python (Highest priority: Any filename containing "python", "py", or Python tools belongs in Python)
+  var isPython =
+    lower.indexOf("python") !== -1 ||
+    lower.indexOf("py_") !== -1 ||
+    lower.indexOf("_py.") !== -1 ||
+    lower.indexOf("-py") !== -1 ||
+    lower.indexOf(".py") !== -1 ||
+    lower.indexOf("django") !== -1 ||
+    lower.indexOf("flask") !== -1 ||
+    lower.indexOf("fastapi") !== -1 ||
+    lower.indexOf("pandas") !== -1 ||
+    lower.indexOf("numpy") !== -1 ||
+    lower.indexOf("matplotlib") !== -1 ||
+    lower.indexOf("seaborn") !== -1 ||
+    lower.indexOf("jupyter") !== -1 ||
+    lower.indexOf("pytorch") !== -1 ||
+    lower.indexOf("tensorflow") !== -1 ||
+    lower.indexOf("scikit") !== -1 ||
+    lower.indexOf("machine learning") !== -1 ||
+    lower.indexOf("data science") !== -1 ||
+    lower.indexOf("automation") !== -1;
+
+  if (isPython) {
+    return "python";
+  }
+
+  // 2. SQL & Databases
   if (
     lower.indexOf("sql") !== -1 ||
     lower.indexOf("database") !== -1 ||
@@ -47,12 +73,38 @@ export function categorizeFile(fileName) {
     return "sql";
   }
 
-  // Data Structures & Algorithms
+  // 3. Java (Core Java, Spring Boot, Hibernate, JVM, OOPs in Java, Java Patterns)
+  var isJavascript =
+    lower.indexOf("javascript") !== -1 ||
+    lower.indexOf(" js") !== -1 ||
+    lower.indexOf(".js") !== -1;
+  var hasJavaKeyword = lower.indexOf("java") !== -1 && !isJavascript;
+
+  var isExplicitDsa =
+    lower.indexOf("dsa") !== -1 ||
+    lower.indexOf("leetcode") !== -1 ||
+    lower.indexOf("algorithm") !== -1;
+
+  if (
+    (hasJavaKeyword && !isExplicitDsa) ||
+    lower.indexOf("jvm") !== -1 ||
+    lower.indexOf("jdk") !== -1 ||
+    lower.indexOf("spring") !== -1 ||
+    lower.indexOf("springboot") !== -1 ||
+    lower.indexOf("hibernate") !== -1 ||
+    lower.indexOf("servlet") !== -1 ||
+    lower.indexOf("jdbc") !== -1
+  ) {
+    return "java";
+  }
+
+  // 4. Data Structures & Algorithms (DSA, LeetCode, patterns without python/java)
   if (
     lower.indexOf("dsa") !== -1 ||
     lower.indexOf("algorithm") !== -1 ||
     lower.indexOf("algo") !== -1 ||
     lower.indexOf("pattern") !== -1 ||
+    lower.indexOf("pttern") !== -1 ||
     lower.indexOf("leetcode") !== -1 ||
     lower.indexOf("tree") !== -1 ||
     lower.indexOf("graph") !== -1 ||
@@ -66,27 +118,7 @@ export function categorizeFile(fileName) {
     return "dsa";
   }
 
-  // Java (Core Java, Spring Boot, Hibernate, JVM, OOPs in Java)
-  var isJavascript =
-    lower.indexOf("javascript") !== -1 ||
-    lower.indexOf(" js") !== -1 ||
-    lower.indexOf(".js") !== -1;
-  var hasJavaKeyword = lower.indexOf("java") !== -1 && !isJavascript;
-
-  if (
-    hasJavaKeyword ||
-    lower.indexOf("jvm") !== -1 ||
-    lower.indexOf("jdk") !== -1 ||
-    lower.indexOf("spring") !== -1 ||
-    lower.indexOf("springboot") !== -1 ||
-    lower.indexOf("hibernate") !== -1 ||
-    lower.indexOf("servlet") !== -1 ||
-    lower.indexOf("jdbc") !== -1
-  ) {
-    return "java";
-  }
-
-  // Full Stack & Web Development
+  // 5. Full Stack & Web Development
   if (
     lower.indexOf("fullstack") !== -1 ||
     lower.indexOf("full-stack") !== -1 ||
@@ -110,7 +142,7 @@ export function categorizeFile(fileName) {
     return "fullstack";
   }
 
-  // Interview Prep & Aptitude
+  // 6. Interview Prep & Aptitude
   if (
     lower.indexOf("interview") !== -1 ||
     lower.indexOf("tcs") !== -1 ||
@@ -127,27 +159,7 @@ export function categorizeFile(fileName) {
     return "interview";
   }
 
-  // Python
-  if (
-    lower.indexOf("python") !== -1 ||
-    lower.indexOf("django") !== -1 ||
-    lower.indexOf("flask") !== -1 ||
-    lower.indexOf("pandas") !== -1 ||
-    lower.indexOf("numpy") !== -1 ||
-    lower.indexOf("matplotlib") !== -1 ||
-    lower.indexOf("ml") !== -1 ||
-    lower.indexOf("machine learning") !== -1 ||
-    lower.indexOf("data science") !== -1 ||
-    lower.indexOf("jupyter") !== -1 ||
-    lower.indexOf("pytorch") !== -1 ||
-    lower.indexOf("tensorflow") !== -1 ||
-    lower.indexOf("scikit") !== -1 ||
-    lower.indexOf("automation") !== -1
-  ) {
-    return "python";
-  }
-
-  // Core Computer Science
+  // 7. Core Computer Science
   if (
     lower.indexOf("operating system") !== -1 ||
     lower.indexOf("os") !== -1 ||
