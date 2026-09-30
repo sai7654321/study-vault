@@ -423,6 +423,13 @@ export default function App() {
         var processed = [];
         var hasNewDriveId = false;
 
+        var personalStars = {};
+        try {
+          personalStars = JSON.parse(localStorage.getItem("studyvault_personal_stars") || "{}");
+        } catch (e) {
+          personalStars = {};
+        }
+
         for (var i = 0; i < cloudRecords.length; i = i + 1) {
           var item = cloudRecords[i];
           var effectiveDriveId = item.driveId || "";
@@ -430,21 +437,24 @@ export default function App() {
             effectiveDriveId = savedIds[item.name];
             hasNewDriveId = true;
           }
+          var fileId = item.id || "file-" + i;
+          var isStarred = personalStars[fileId] !== undefined ? Boolean(personalStars[fileId]) : Boolean(item.starred);
+
           processed.push({
-            id: item.id || "file-" + i,
+            id: fileId,
             name: item.name,
             driveId: effectiveDriveId,
             category: categorizeFile(item.name),
             size: item.size || "PDF Document",
             uploadDate: item.uploadDate || "Recent",
-            starred: Boolean(item.starred),
+            starred: isStarred,
             description: item.description || ""
           });
         }
         setFiles(processed);
 
-        // If local had drive links that weren't in cloud yet, sync them up!
-        if (hasNewDriveId) {
+        // If local had drive links that weren't in cloud yet, sync them up if admin
+        if (hasNewDriveId && isAdmin) {
           saveCloudFiles(processed);
         }
       }
@@ -502,9 +512,11 @@ export default function App() {
 
   function handleToggleStar(fileId) {
     var updated = [];
+    var newStarState = false;
     for (var i = 0; i < files.length; i = i + 1) {
       var item = files[i];
       if (item.id === fileId) {
+        newStarState = !item.starred;
         updated.push({
           id: item.id,
           name: item.name,
@@ -512,7 +524,7 @@ export default function App() {
           category: item.category,
           size: item.size,
           uploadDate: item.uploadDate,
-          starred: !item.starred,
+          starred: newStarState,
           description: item.description
         });
       } else {
@@ -520,10 +532,32 @@ export default function App() {
       }
     }
     setFiles(updated);
-    saveCloudFiles(updated);
+
+    // Save personal favorite star to learner's device
+    try {
+      var localStars = JSON.parse(localStorage.getItem("studyvault_personal_stars") || "{}");
+      if (newStarState) {
+        localStars[fileId] = true;
+      } else {
+        delete localStars[fileId];
+      }
+      localStorage.setItem("studyvault_personal_stars", JSON.stringify(localStars));
+    } catch (e) {
+      // Local storage fallback
+    }
+
+    // Only sync to shared cloud if user has authenticated Admin privileges
+    if (isAdmin) {
+      saveCloudFiles(updated);
+    }
   }
 
   function handleUpdateDriveId(fileId, newDriveId) {
+    if (!isAdmin) {
+      showToast("Unauthorized: Admin privileges required to attach Google Drive links.", "error");
+      return;
+    }
+
     var updated = [];
     var matchedFile = null;
     for (var i = 0; i < files.length; i = i + 1) {

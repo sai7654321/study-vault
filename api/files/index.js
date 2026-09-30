@@ -57,6 +57,40 @@ export default async function handler(req, res) {
     });
   }
 
-  res.setHeader("Allow", "GET, POST");
+  if (req.method === "PUT") {
+    // Protected: ONLY authenticated Admin can bulk update/sync file storage
+    var authUser = getAuthenticatedUser(req);
+    if (!authUser) {
+      return res.status(401).json({
+        error: "Unauthorized: Admin privileges required to synchronize study resources."
+      });
+    }
+
+    var putBody = req.body || {};
+    if (typeof putBody === "string") {
+      try {
+        putBody = JSON.parse(putBody);
+      } catch (e) {
+        putBody = {};
+      }
+    }
+
+    var filesList = Array.isArray(putBody.files) ? putBody.files : (Array.isArray(putBody) ? putBody : null);
+    if (!filesList) {
+      return res.status(400).json({ error: "Missing or invalid 'files' array in payload." });
+    }
+
+    var bulkSaveResult = await saveFilesToStorage(filesList);
+    if (!bulkSaveResult.success) {
+      return res.status(500).json({ error: "Failed to persist files in storage: " + bulkSaveResult.error });
+    }
+
+    return res.status(200).json({
+      success: true,
+      count: filesList.length
+    });
+  }
+
+  res.setHeader("Allow", "GET, POST, PUT");
   return res.status(405).json({ error: "Method not allowed" });
 }

@@ -79,8 +79,19 @@ export async function verifyGoogleIdToken(idToken) {
   }
 }
 
+export function getSessionSecret() {
+  var secret = process.env.SESSION_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL === "1") {
+      throw new Error("Security Violation: SESSION_SECRET environment variable must be defined in production.");
+    }
+    return "studyvault-dev-local-secret-32-chars-key";
+  }
+  return secret;
+}
+
 export function getAuthenticatedUser(req) {
-  var secret = process.env.SESSION_SECRET || "studyvault-default-secure-secret-key-32chars";
+  var secret = getSessionSecret();
   var adminEmail = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
 
   var token = null;

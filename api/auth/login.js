@@ -1,4 +1,4 @@
-import { createSessionToken, verifyGoogleIdToken } from "../_lib/auth.js";
+import { createSessionToken, verifyGoogleIdToken, getSessionSecret } from "../_lib/auth.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -16,8 +16,8 @@ export default async function handler(req, res) {
   }
 
   var adminEmail = (process.env.ADMIN_EMAIL || "admin@studyvault.com").trim().toLowerCase();
-  var adminPassword = (process.env.ADMIN_PASSWORD || "Sairajesh14300##").trim();
-  var sessionSecret = process.env.SESSION_SECRET || "studyvault-default-secure-secret-key-32chars";
+  var adminPassword = (process.env.ADMIN_PASSWORD || "").trim();
+  var sessionSecret = getSessionSecret();
 
   var authenticatedUser = null;
 
@@ -38,17 +38,13 @@ export default async function handler(req, res) {
     }
   }
 
-  // 2. Or authenticate via Admin Master Password fallback
+  // 2. Or authenticate via Admin Master Password
   if (!authenticatedUser && body.password) {
     var inputPass = String(body.password).trim();
-    if (
-      (adminPassword && inputPass === adminPassword) ||
-      inputPass === "Sairajesh14300##" ||
-      inputPass === "admin123"
-    ) {
+    if (adminPassword && inputPass === adminPassword) {
       authenticatedUser = {
         email: adminEmail,
-        name: "StudyVault Owner"
+        name: "StudyWallet Owner"
       };
     } else {
       return res.status(401).json({ error: "Invalid admin password." });
